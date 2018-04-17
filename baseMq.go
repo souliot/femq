@@ -208,7 +208,3 @@ func (bmq *BaseMq) Consumer(channelContext *ChannelContext, calllback func(strin
 	}
 	return nil
 }
-
-type MessageCallBack interface {
-	OnMessage(msg amqp.Delivery) bool
-}
