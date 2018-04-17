@@ -1,4 +1,4 @@
-package feutil
+package femq
 
 import (
 	"bytes"
