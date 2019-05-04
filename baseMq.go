@@ -103,10 +103,10 @@ func (bmq *BaseMq) refreshConnectionAndChannel(channelContext *ChannelContext) e
 		channelContext.Exchange,     // name
 		channelContext.ExchangeType, // type
 		channelContext.Durable,      // durable
-		false, // auto-deleted
-		false, // internal
-		false, // noWait
-		nil,   // arguments
+		false,                       // auto-deleted
+		false,                       // internal
+		false,                       // noWait
+		nil,                         // arguments
 	); err != nil {
 		beego.Info("channel exchange deflare failed refreshConnectionAndChannel again", err)
 		return err
@@ -145,8 +145,8 @@ func (bmq *BaseMq) Publish(channelContext *ChannelContext, body string) error {
 	if err := channelContext.Channel.Publish(
 		channelContext.Exchange,   // publish to an exchange
 		channelContext.RoutingKey, // routing to 0 or more queues
-		false, // mandatory
-		false, // immediate
+		false,                     // mandatory
+		false,                     // immediate
 		amqp.Publishing{
 			Headers:         amqp.Table{},
 			ContentType:     "application/json",
@@ -176,14 +176,24 @@ func (bmq *BaseMq) Consumer(channelContext *ChannelContext, calllback func(strin
 	} else {
 		channelContext = bmq.ChannelContexts[channelContext.ChannelId]
 	}
+	_, err = channelContext.Channel.QueueDeclare(channelContext.RoutingKey, true, false, false, false, nil)
+	if err != nil {
+		beego.Info("queue.declare: ", err)
+	}
+
+	err = channelContext.Channel.QueueBind(channelContext.RoutingKey, channelContext.RoutingKey, channelContext.Exchange, false, nil)
+	if err != nil {
+		beego.Info("queue.bind: ", err)
+	}
+
 	if msgs, err := channelContext.Channel.Consume(
 		channelContext.RoutingKey, // routing to 0 or more queues
-		"",    // consumer
-		false, // auto-ack
-		false, // exclusive
-		false, // no-local
-		false, // no-wait
-		nil,   // args
+		"",                        // consumer
+		false,                     // auto-ack
+		false,                     // exclusive
+		false,                     // no-local
+		false,                     // no-wait
+		nil,                       // args
 	); err != nil {
 		beego.Info(err)
 		beego.Info("consumer message failed refresh connection")
