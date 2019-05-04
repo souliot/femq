@@ -176,7 +176,7 @@ func (bmq *BaseMq) Consumer(channelContext *ChannelContext, calllback func(strin
 	} else {
 		channelContext = bmq.ChannelContexts[channelContext.ChannelId]
 	}
-	_, err = channelContext.Channel.QueueDeclare(channelContext.RoutingKey, true, false, false, false, nil)
+	_, err := channelContext.Channel.QueueDeclare(channelContext.RoutingKey, true, false, false, false, nil)
 	if err != nil {
 		beego.Info("queue.declare: ", err)
 	}
