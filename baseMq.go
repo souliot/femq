@@ -161,7 +161,7 @@ func (bmq *BaseMq) Publish(channelContext *ChannelContext, body string) error {
 		time.Sleep(10 * time.Second)
 		bmq.refreshConnectionAndChannel(channelContext)
 	} else {
-		beego.Info("send messsage success", body)
+		// beego.Info("send messsage success", body)
 	}
 	return nil
 }
